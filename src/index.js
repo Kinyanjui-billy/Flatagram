@@ -54,6 +54,19 @@ function cardRender(card) {
     cardImage.style.display = hide ? "none" : "";
     hide = !hide;
   });
+
+  //change image
+  cardImage.addEventListener("click", () => {
+    url = "https://dog.ceo/api/breeds/image/random";
+    fetch(url)
+      .then((res) => res.json())
+      .then((res) => {
+        cardImage.src = res.message;
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  });
 }
 
 function fetchData(id = 1) {
