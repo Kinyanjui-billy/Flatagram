@@ -6,10 +6,10 @@ function cardRender(card) {
   const cardTitle = document.querySelector("#card-title");
   const cardImage = document.querySelector("#card-image");
   const cardLikeCount = document.querySelector("#like-count");
-  const cardLikesBtnTag = document.querySelector("#like-button");
+  const cardLikesButton = document.querySelector("#like-button");
   const cardCommentList = document.querySelector("#comments-list");
-  const cardCommentFormTag = document.querySelector("#comment-form");
-  const cardCommentInputTag = document.querySelector("#comment");
+  const cardCommentForm = document.querySelector("#comment-form");
+  const cardCommentInput = document.querySelector("#comment");
 
   cardTitle.textContent = card.title;
   cardImage.src = card.image;
@@ -21,7 +21,31 @@ function cardRender(card) {
   card.comments.forEach((comment) => {
     let cardComment = document.createElement("li");
     cardComment.textContent = comment.content;
+    cardComment.setAttribute("id", comment.id);
     cardCommentList.appendChild(cardComment);
+  });
+
+  //add likes
+  cardLikesButton.addEventListener("click", () => {
+    card.likes += 1;
+    cardLikeCount.textContent = `${card.likes} likes`;
+  });
+
+  //add comments
+  cardCommentForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    let cardComment = document.createElement("li");
+    cardComment.textContent = cardCommentInput.value;
+    cardComment.setAttribute("id", card.comments.length + 1);
+    cardCommentList.appendChild(cardComment);
+
+    let newComment = {
+      id: card.comments.length + 1,
+      imageId: 1,
+      content: cardCommentInput.value,
+    };
+
+    postComment(newComment);
   });
 }
 
@@ -33,6 +57,31 @@ function fetchData(id = 1) {
     .catch((err) => {
       console.log(err);
     });
+}
+
+function postComment(comment) {
+  url = "http://localhost:3000/comments";
+  fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(comment),
+  })
+    .then((res) => res.json())
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
+
+function patchData(updatedData, id = 1) {
+  url = `http://localhost:3000/images/${id}`;
+  fetch(url, {
+    method: "PATCH",
+  });
 }
 
 function init() {
