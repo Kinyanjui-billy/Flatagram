@@ -47,6 +47,13 @@ function cardRender(card) {
 
     postComment(newComment);
   });
+
+  // toggle show image
+  let hide = true;
+  cardTitle.addEventListener("click", (e) => {
+    cardImage.style.display = hide ? "none" : "";
+    hide = !hide;
+  });
 }
 
 function fetchData(id = 1) {
